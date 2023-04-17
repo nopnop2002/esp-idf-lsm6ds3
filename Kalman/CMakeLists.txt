@@ -2,10 +2,7 @@
 # in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.5)
 
-set(EXTRA_COMPONENT_DIRS ../components/I2Cdev 
-                         ../components/LSM6DS3
-                         ../components/KalmanFilter
-                         ../components/websocket)
+set(EXTRA_COMPONENT_DIRS ../components/)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(LSM6DS3)

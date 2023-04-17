@@ -76,7 +76,7 @@ or
 http://esp32.local/
 ```
 
-![lsm6ds3-browser](https://user-images.githubusercontent.com/6020549/227118381-60b0ba72-b985-4437-b5c5-b5c8efd7fd54.jpg)
+![lsm6ds3-browser](https://user-images.githubusercontent.com/6020549/232377336-c57de536-16ee-4ded-a269-90bc71b0b9e5.jpg)
 
 WEB pages are stored in the html folder.   
 I used [this](https://canvas-gauges.com/) for gauge display.   
