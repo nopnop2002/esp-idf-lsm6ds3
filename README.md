@@ -11,7 +11,7 @@ I used [this](https://github.com/arduino-libraries/Arduino_LSM6DS3) library.
 
 # Software requiment
 ESP-IDF V4.4/V5.0.   
-ESP-IDF V5 is required when using ESP32-C2.   
+ESP-IDF V5.0 is required when using ESP32-C2.   
 
 # Hardware requirements
 LSM6DS3 Accelerometer Gyroscope module 6 Dof inertial Measurement Sensors.   
