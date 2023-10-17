@@ -10,14 +10,15 @@ However, since LSM6DS3 is a 6DoF IMU, YAW estimation is not possible.
 I used [this](https://github.com/arduino-libraries/Arduino_LSM6DS3) library.   
 
 # Software requiment
-ESP-IDF V4.4/V5.0.   
+ESP-IDF V4.4/V5.x.   
 ESP-IDF V5.0 is required when using ESP32-C2.   
+ESP-IDF V5.1 is required when using ESP32-C6.   
 
 # Hardware requirements
 LSM6DS3 Accelerometer Gyroscope module 6 Dof inertial Measurement Sensors.   
 
 # Wireing
-|LSM6DS3||ESP32|ESP32-S2/S3|ESP32-C2/C3||
+|LSM6DS3||ESP32|ESP32-S2/S3|ESP32-C2/C3/C6||
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |VIN|--|N/C|N/C|N/C||
 |3V3|--|3.3V|3.3V|3.3V||
@@ -54,7 +55,7 @@ I used [this](https://github.com/arduino-libraries/MadgwickAHRS).
 ```
 git clone https://github.com/nopnop2002/esp-idf-lsm6ds3
 cd esp-idf-lsm6ds3/Madgwick
-idf.py set-target {esp32/esp32s2/esp32s3/esp32c2/esp32c3}
+idf.py set-target {esp32/esp32s2/esp32s3/esp32c2/esp32c3/esp32c6}
 idf.py menuconfig
 idf.py flash
 ```
