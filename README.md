@@ -7,8 +7,6 @@ It's very intuitive and easy to understand.
 However, since LSM6DS3 is a 6DoF IMU, YAW estimation is not possible.   
 ![a-Pitch-yaw-and-roll-angles-of-an-aircraft-with-body-orientation-O-u-v-original](https://user-images.githubusercontent.com/6020549/226072914-a7f923fc-eb6e-4d19-b2ff-8c9f2749ee6f.jpg)
 
-I used [this](https://github.com/arduino-libraries/Arduino_LSM6DS3) library.   
-
 # Software requiment
 ESP-IDF V4.4/V5.x.   
 ESP-IDF V5.0 is required when using ESP32-C2.   
