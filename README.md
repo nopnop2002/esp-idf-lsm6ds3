@@ -34,7 +34,6 @@ GND:i2c address is 0x6A.
 
 
 # Get Euler angles from lsm6ds3 using Kalman filter
-I used [this](https://github.com/TKJElectronics/KalmanFilter).
 ```
 git clone https://github.com/nopnop2002/esp-idf-lsm6ds3
 cd esp-idf-lsm6ds3/Kalman
@@ -49,7 +48,6 @@ idf.py flash
 
 
 # Get Euler angles from lsm6ds3 using Madgwick filter
-I used [this](https://github.com/arduino-libraries/MadgwickAHRS).
 ```
 git clone https://github.com/nopnop2002/esp-idf-lsm6ds3
 cd esp-idf-lsm6ds3/Madgwick
