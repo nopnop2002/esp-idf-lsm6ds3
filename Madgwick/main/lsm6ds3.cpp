@@ -38,6 +38,36 @@ LSM6DS3 imu(CONFIG_I2C_ADDR);
 
 Madgwick madgwick;
 
+void _getMotion6(double *_ax, double *_ay, double *_az, double *_gx, double *_gy, double *_gz) {
+	float ax=0.0, ay=0.0, az=0.0;
+	float gx=0.0, gy=0.0, gz=0.0;
+#if 0
+	if (imu.accelerationAvailable()) {
+		imu.readAcceleration(ax, ay, az);
+	}
+	if (imu.gyroscopeAvailable()) {
+		imu.readGyroscope(gx, gy, gz);
+	}
+#endif
+	while(1) {
+		if (imu.accelerationAvailable()) break;
+		vTaskDelay(1);
+	}
+	imu.readAcceleration(ax, ay, az);
+	while(1) {
+		if (imu.gyroscopeAvailable()) break;
+		vTaskDelay(1);
+	}
+	imu.readGyroscope(gx, gy, gz);
+
+	*_ax = ax;
+	*_ay = ay;
+	*_az = az;
+	*_gx = gx;
+	*_gy = gy;
+	*_gz = gz;
+}
+
 // Get time in seconds since boot
 // Compatible with ROS's time.toSec() function
 double TimeToSec() {
@@ -53,9 +83,6 @@ void lsm6ds3(void *pvParameters){
 		vTaskDelete(NULL);
 	}
 	
-	ESP_LOGI(TAG, "Accelerometer sample rate = %f", imu.accelerationSampleRate());
-	ESP_LOGI(TAG, "Gyroscope sample rate = %f", imu.gyroscopeSampleRate());
-
 	int elasped = 0;
 	double last_time_ = TimeToSec();
 
@@ -69,15 +96,10 @@ void lsm6ds3(void *pvParameters){
 	int initial_period = 400;
 
 	while(1){
-		float ax=0.0, ay=0.0, az=0.0;
-		if (imu.accelerationAvailable()) {
-			imu.readAcceleration(ax, ay, az);
-		}
-		float gx=0.0, gy=0.0, gz=0.0;
-		if (imu.gyroscopeAvailable()) {
-			imu.readGyroscope(gx, gy, gz);
-		}
-		ESP_LOGD(TAG, "acel=%f %f %f gyro=%f %f %f", ax, ay, az, gx, gy, gz);
+		double ax=0.0, ay=0.0, az=0.0;
+		double gx=0.0, gy=0.0, gz=0.0;
+		_getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+		//printf("%f %f %f - %f %f %f\n", ax, ay, az, gx, gy, gz);
 
 		// Get the elapsed time from the previous
 		float dt = (TimeToSec() - last_time_);
