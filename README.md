@@ -92,8 +92,10 @@ This is a great application.
 +-------------+     +-------------+     +-------------+
 ```
 
-### Installation
+### Installation for Linux
 ```
+$ python3 --version
+Python 3.11.2
 $ sudo apt install python3-pip python3-setuptools
 $ python3 -m pip install -U pip
 $ python3 -m pip install pygame
@@ -105,3 +107,17 @@ $ python3 pyteapot.py
 The posture of your sensor is displayed.   
 ![lsm6ds3_2023-03-23_10-52-26](https://user-images.githubusercontent.com/6020549/227118323-031c5dc6-d3d0-4169-8b0f-27c5948f91cf.png)
 
+### Installation for Windows   
+Install Git for Windows from [here](https://gitforwindows.org/).   
+Install Python Releases for Windows from [here](https://www.python.org/downloads/windows/).   
+Open Git Bash and run:   
+```
+$ python --version
+Python 3.11.9
+$ python -m pip install -U pip
+$ python -m pip install pygame
+$ python -m pip install PyOpenGL PyOpenGL_accelerate
+$ git clone https://github.com/thecountoftuscany/PyTeapot-Quaternion-Euler-cube-rotation
+$ cd PyTeapot-Quaternion-Euler-cube-rotation
+$ python pyteapot.py
+```
