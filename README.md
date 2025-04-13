@@ -122,3 +122,59 @@ $ cd PyTeapot-Quaternion-Euler-cube-rotation
 $ python pyteapot.py
 ```
 ![Image](https://github.com/user-attachments/assets/3aa9fd0d-2a0a-4a7c-ac40-4b84a70acaaf)
+
+
+# View Euler angles using panda3d library   
+You can view Euler angles using [this](https://www.panda3d.org/) library.   
+It works as a UDP display server.   
+
+```
++-------------+         +-------------+         +-------------+
+|     IMU     |         |    ESP32    |         |  panda.py   |
+|             |--(ic2)->|             |--(UDP)->|             |
+|             |         |             |         |             |
++-------------+         +-------------+         +-------------+
+```
+
+### Installation for Linux
+```
+$ python3 --version
+Python 3.11.2
+$ sudo apt install python3-pip python3-setuptools
+$ python3 -m pip install -U pip
+$ python3 -m pip install panda3d
+$ git clone https://github.com/nopnop2002/esp-idf-mpu6050-dmp
+$ cd esp-idf-mpu6050-dmp/panda3d
+$ python3 panda.py --help
+usage: panda.py [-h] [--model {jet,biplain,707,fa18}]
+
+options:
+  -h, --help            show this help message and exit
+  --model {jet,biplain,707,fa18}
+```
+![Image](https://github.com/user-attachments/assets/6d81eec0-5b80-4e5f-ae97-689742253f9a)   
+
+### Installation for Windows
+Install Git for Windows from [here](https://gitforwindows.org/).   
+Install Python Releases for Windows from [here](https://www.python.org/downloads/windows/).   
+Open Git Bash and run:   
+```
+$ python --version
+Python 3.11.9
+$ python -m pip install -U pip
+$ python -m pip install panda3d
+$ git clone https://github.com/nopnop2002/esp-idf-mpu6050-dmp
+$ cd esp-idf-mpu6050-dmp/panda3d
+$ python panda.py --help
+usage: panda.py [-h] [--model {jet,biplain,707,fa18}]
+
+options:
+  -h, --help            show this help message and exit
+  --model {jet,biplain,707,fa18}
+```
+![Image](https://github.com/user-attachments/assets/0ec982c4-3353-4cb8-9c39-ecd785ca9729)
+
+### How to use   
+See [here](https://github.com/nopnop2002/esp-idf-mpu6050-dmp/blob/main/panda3d/README.md)   
+
+
