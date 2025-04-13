@@ -5,7 +5,9 @@ You can use the Kalman filter or the Madgwick filter to estimate the Euler angle
 Euler angles are roll, pitch and yaw.   
 It's very intuitive and easy to understand.   
 However, since LSM6DS3 is a 6DoF IMU, YAW estimation is not possible.   
-![a-Pitch-yaw-and-roll-angles-of-an-aircraft-with-body-orientation-O-u-v-original](https://user-images.githubusercontent.com/6020549/226072914-a7f923fc-eb6e-4d19-b2ff-8c9f2749ee6f.jpg)
+![a-Pitch-yaw-and-roll-angles-of-an-aircraft-with-body-orientation-O-u-v-original](https://user-images.githubusercontent.com/6020549/226072914-a7f923fc-eb6e-4d19-b2ff-8c9f2749ee6f.jpg)   
+You can view like this.   
+![Image](https://github.com/user-attachments/assets/6d81eec0-5b80-4e5f-ae97-689742253f9a)   
 
 # Software requiment
 ESP-IDF V4.4/V5.x.   
