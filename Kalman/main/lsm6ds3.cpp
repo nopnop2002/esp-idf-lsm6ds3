@@ -8,7 +8,6 @@
 #include "esp_timer.h"
 #include "esp_log.h"
 #include "esp_err.h"
-#include "driver/i2c.h"
 #include "cJSON.h"
 
 #include "parameter.h"
