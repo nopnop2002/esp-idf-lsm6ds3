@@ -145,6 +145,7 @@ Python 3.11.2
 $ sudo apt install python3-pip python3-setuptools
 $ python3 -m pip install -U pip
 $ python3 -m pip install panda3d
+$ python3 -m pip install numpy
 $ git clone https://github.com/nopnop2002/esp-idf-mpu6050-dmp
 $ cd esp-idf-mpu6050-dmp/panda3d
 $ python3 panda.py --help
@@ -165,6 +166,7 @@ $ python --version
 Python 3.11.9
 $ python -m pip install -U pip
 $ python -m pip install panda3d
+$ python -m pip install numpy
 $ git clone https://github.com/nopnop2002/esp-idf-mpu6050-dmp
 $ cd esp-idf-mpu6050-dmp/panda3d
 $ python panda.py --help
