@@ -19,12 +19,29 @@
 
 #include "LSM6DS3.h"
 
-LSM6DS3::LSM6DS3(uint8_t slaveAddress) {
-  devAddr = slaveAddress;
+/** Default constructor, uses default I2C address.
+ * @see LSM6DS3_DEFAULT_ADDRESS
+ */
+LSM6DS3::LSM6DS3() {
+  devAddr = LSM6DS3_DEFAULT_ADDRESS;
 }
 
-int LSM6DS3::begin()
+/** Specific address constructor.
+ * @param address I2C address
+ * @see LSM6DS3_DEFAULT_ADDRESS
+ * @see LSM6DS3_ADDRESS_00
+ * @see LSM6DS3_ADDRESS_01
+ */
+LSM6DS3::LSM6DS3(uint16_t address) {
+  devAddr = address;
+}
+
+int LSM6DS3::begin(uint32_t clkSpeed)
 {
+  // Initialize device
+  devHandle = I2Cdev::addDevice(devAddr, clkSpeed);
+
+  // Get Who_AM_I register
   if (!(readRegister(LSM6DS3_WHO_AM_I_REG) == 0x6C || readRegister(LSM6DS3_WHO_AM_I_REG) == 0x69)) {
     end();
     return 0;
@@ -145,12 +162,12 @@ int LSM6DS3::readRegister(uint8_t address)
 
 int LSM6DS3::readRegisters(uint8_t address, uint8_t* data, size_t length)
 {
-  I2Cdev::readBytes(devAddr, address, length, data);
+  I2Cdev::readBytes(devHandle, address, length, data);
   return 1;
 }
 
 int LSM6DS3::writeRegister(uint8_t address, uint8_t value)
 {
-  I2Cdev::writeByte(devAddr, address, value);
+  I2Cdev::writeByte(devHandle, address, value);
   return 1;
 }

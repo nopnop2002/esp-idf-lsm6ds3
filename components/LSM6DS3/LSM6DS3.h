@@ -22,7 +22,9 @@
 
 #include "I2Cdev.h"
 
-#define LSM6DS3_ADDRESS            0x6A
+#define LSM6DS3_ADDRESS_00         0x6A
+#define LSM6DS3_ADDRESS_01         0x6B
+#define LSM6DS3_DEFAULT_ADDRESS    LSM6DS3_ADDRESS_00
 
 #define LSM6DS3_WHO_AM_I_REG       0X0F
 #define LSM6DS3_CTRL1_XL           0X10
@@ -52,9 +54,10 @@
 
 class LSM6DS3 {
   public:
-    LSM6DS3(uint8_t slaveAddress);
+    LSM6DS3();
+    LSM6DS3(uint16_t address);
 
-    int begin();
+    int begin(uint32_t clkSpeed);
     void end();
 
     // Accelerometer
@@ -75,7 +78,8 @@ class LSM6DS3 {
 
 
   private:
-    uint8_t devAddr;
+    uint16_t devAddr; // I2C device address
+    i2c_master_dev_handle_t devHandle; // I2C device handle
 };
 
 #endif /* _LSM6DS3_H_ */
