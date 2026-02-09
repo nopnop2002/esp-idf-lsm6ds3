@@ -34,7 +34,6 @@ LSM6DS3 imu(CONFIG_I2C_ADDR);
 
 // Arduino macro
 #define micros() (unsigned long) (esp_timer_get_time())
-#define delay(ms) esp_rom_delay_us(ms*1000)
 
 Kalman kalmanX; // Create the Kalman instances
 Kalman kalmanY;
@@ -83,7 +82,7 @@ void getRollPitch(double accX, double accY, double accZ, double *roll, double *p
 
 void lsm6ds3(void *pvParameters){
 	// Initialize device
-	if (imu.begin() == 0) {
+	if (imu.begin(400000) == 0) {
 		ESP_LOGE(TAG, "Connection fail");
 		vTaskDelete(NULL);
 	}
