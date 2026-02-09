@@ -76,8 +76,9 @@ http://esp32.local/
 ![lsm6ds3-browser](https://user-images.githubusercontent.com/6020549/232383992-b9cff50e-fc86-4395-b698-3ddbc1ecdd53.jpg)
 
 WEB pages are stored in the html folder.   
-I used [this](https://canvas-gauges.com/) for gauge display.   
 I used [this](https://threejs.org/) for 3D display.   
+I used [this](https://canvas-gauges.com/) for gauge display.   
+Configuration Options for the gauge display is [here](https://canvas-gauges.com/documentation/user-guide/configuration).   
 You can change the design and color according to your preference like this.   
 ![Image](https://github.com/user-attachments/assets/dfe82573-27a7-4395-bad6-cef1e3b4299c)   
 
