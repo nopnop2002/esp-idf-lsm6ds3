@@ -9,10 +9,9 @@ However, since LSM6DS3 is a 6DoF IMU, YAW estimation is not possible.
 You can view like this.   
 ![Image](https://github.com/user-attachments/assets/cb9f1408-b372-4e55-84f6-1191f068cd1a)
 
-# Software requiment
-ESP-IDF V5.0 or later.   
-ESP-IDF V4.4 release branch reached EOL in July 2024.   
-ESP-IDF V5.1 is required when using ESP32-C6.   
+# Software requirements
+ESP-IDF V5.2 or later.   
+Because this project uses the new I2C driver.   
 
 # Hardware requirements
 LSM6DS3 Accelerometer Gyroscope module 6 Dof inertial Measurement Sensors.   
