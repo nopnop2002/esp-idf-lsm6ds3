@@ -15,5 +15,8 @@ The original is fixed at 1.0 second, but I changed this to a parameter.
 I used [this](https://github.com/jrowberg/i2cdevlib/tree/master/Arduino) I2Cdev library collection by Jeff Rowberg.   
 However, I2Cdev has been rewritten for ESP-IDF.   
 
+# LSM6DS3   
+I ported from [here](https://github.com/arduino-libraries/Arduino_LSM6DS3/tree/master).   
+
 # websocket   
 I used [this](https://github.com/Molorius/esp32-websocket) ESP-IDF WebSocket Component.   
