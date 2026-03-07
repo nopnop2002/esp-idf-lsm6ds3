@@ -20,3 +20,5 @@ I ported from [here](https://github.com/arduino-libraries/Arduino_LSM6DS3/tree/m
 
 # websocket   
 I used [this](https://github.com/Molorius/esp32-websocket) ESP-IDF WebSocket Component.   
+The original uses mbedtls_sha1(), but I changed to mbedtls_md().   
+This is because mbedtls_sha1() was deprecated in ESP-IDF V6.   
