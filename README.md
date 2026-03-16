@@ -33,6 +33,19 @@ LSM6DS3 Accelerometer Gyroscope module 6 Dof inertial Measurement Sensors.
 GND:i2c address is 0x6A.   
 3.3V:i2c address is 0x6B.   
 
+# Find the sensor
+We can find the sensor using [i2c-tools](https://github.com/espressif/esp-idf/tree/master/examples/peripherals/i2c/i2c_tools).   
+
+- Selcect SCL and SDA using menuconfig.   
+![Image](https://github.com/user-attachments/assets/5a5d46fd-ce1e-4199-acf4-c6b49abc2dd8)
+
+- Detect senser.   
+The i2c address for this sensor is 0x6a or 0x6b.   
+![Image](https://github.com/user-attachments/assets/676e02f4-142f-4c97-93fa-569e7598f325)
+
+- Read register.   
+Register 0x0f for this sensor is 0x69.   
+![Image](https://github.com/user-attachments/assets/c80cd905-2750-43ac-8164-e35626d26d3d)
 
 # Get Euler angles from lsm6ds3 using Kalman filter
 ```
