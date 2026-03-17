@@ -20,8 +20,6 @@
 #ifndef _LSM6DS3_H_
 #define _LSM6DS3_H_
 
-#include "I2Cdev.h"
-
 #define LSM6DS3_ADDRESS_00         0x6A
 #define LSM6DS3_ADDRESS_01         0x6B
 #define LSM6DS3_DEFAULT_ADDRESS    LSM6DS3_ADDRESS_00
@@ -57,7 +55,7 @@ class LSM6DS3 {
     LSM6DS3();
     LSM6DS3(uint16_t address);
 
-    int begin(uint32_t clkSpeed);
+    int begin();
     void end();
 
     // Accelerometer
@@ -69,6 +67,8 @@ class LSM6DS3 {
     virtual int readGyroscope(float& x, float& y, float& z); // Results are in degrees/second.
     virtual float gyroscopeSampleRate(); // Sampling rate of the sensor.
     virtual int gyroscopeAvailable(); // Check for available data from gyroscope
+    virtual void getGyroscopeBias(float *gyroBias);
+    virtual void setGyroscopeBias(float *gyroBias);
 
 
   protected:
@@ -79,7 +79,8 @@ class LSM6DS3 {
 
   private:
     uint16_t devAddr; // I2C device address
-    i2c_master_dev_handle_t devHandle; // I2C device handle
+    float _accelBias[3] = {0};
+    float _gyroBias[3] = {0};
 };
 
 #endif /* _LSM6DS3_H_ */

@@ -17,7 +17,20 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include <cstring>
+#include "esp_rom_sys.h"
+#include "esp_log.h"
+#include "driver/i2c_master.h"
 #include "LSM6DS3.h"
+
+#define I2C_NUM I2C_NUM_0
+#define I2C_TICKS_TO_WAIT 100 // Maximum ticks to wait before issuing a timeout.
+
+static i2c_master_bus_handle_t bus_handle;
+static i2c_master_dev_handle_t dev_handle;
+
+// Arduino compatible macros
+#define delay(ms) esp_rom_delay_us(ms*1000)
 
 /** Default constructor, uses default I2C address.
  * @see LSM6DS3_DEFAULT_ADDRESS
@@ -36,10 +49,23 @@ LSM6DS3::LSM6DS3(uint16_t address) {
   devAddr = address;
 }
 
-int LSM6DS3::begin(uint32_t clkSpeed)
+int LSM6DS3::begin()
 {
-  // Initialize device
-  devHandle = I2Cdev::addDevice(devAddr, clkSpeed);
+  // using I2C for communication
+  i2c_master_bus_config_t i2c_mst_config = {};
+  i2c_mst_config.clk_source = I2C_CLK_SRC_DEFAULT;
+  i2c_mst_config.glitch_ignore_cnt = 7;
+  i2c_mst_config.i2c_port = I2C_NUM;
+  i2c_mst_config.scl_io_num = (gpio_num_t)CONFIG_GPIO_SCL;
+  i2c_mst_config.sda_io_num = (gpio_num_t)CONFIG_GPIO_SDA;
+  i2c_mst_config.flags.enable_internal_pullup = true;
+  ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_mst_config, &bus_handle));
+
+  i2c_device_config_t dev_cfg = {};
+  dev_cfg.dev_addr_length = I2C_ADDR_BIT_LEN_7;
+  dev_cfg.device_address = devAddr;
+  dev_cfg.scl_speed_hz = 400000;
+  ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_cfg, &dev_handle));
 
   // Get Who_AM_I register
   if (!(readRegister(LSM6DS3_WHO_AM_I_REG) == 0x6C || readRegister(LSM6DS3_WHO_AM_I_REG) == 0x69)) {
@@ -128,9 +154,9 @@ int LSM6DS3::readGyroscope(float& x, float& y, float& z)
   y = data[1] * 2000.0 / 32768.0;
   z = data[2] * 2000.0 / 32768.0;
 #endif
-  x = data[0] / 131.0;
-  y = data[1] / 131.0;
-  z = data[2] / 131.0;
+  x = (data[0] - _gyroBias[0]) / 131.0;
+  y = (data[1] - _gyroBias[1]) / 131.0;
+  z = (data[2] - _gyroBias[2]) / 131.0;
 
   return 1;
 }
@@ -149,6 +175,33 @@ float LSM6DS3::gyroscopeSampleRate()
   return 104.0F;
 }
 
+void LSM6DS3::getGyroscopeBias(float *gyroBias) {
+  int16_t data[3];
+  int32_t sum[3] = {0};
+  int count = 0;
+
+  while(1) {
+    if (readRegisters(LSM6DS3_OUTX_L_G, (uint8_t*)data, sizeof(data))) {
+      sum[0] += data[0];
+      sum[1] += data[1];
+      sum[2] += data[2];
+      //printf("sum=%ld %ld %ld\n", sum[0],sum[1],sum[2]);
+      count++;
+      if (count == 100) break;
+      delay(10);
+    }
+  }
+  for (int i = 0; i < 3; ++i) {
+    gyroBias[i] = sum[i] / 100.0f;
+  }
+}
+
+void LSM6DS3::setGyroscopeBias(float *gyroBias) {
+  for (int i = 0; i < 3; ++i) {
+    _gyroBias[i] = gyroBias[i];
+  }
+}
+
 int LSM6DS3::readRegister(uint8_t address)
 {
   uint8_t value;
@@ -162,12 +215,17 @@ int LSM6DS3::readRegister(uint8_t address)
 
 int LSM6DS3::readRegisters(uint8_t address, uint8_t* data, size_t length)
 {
-  I2Cdev::readBytes(devHandle, address, length, data);
+  uint8_t out_buf[1];
+  out_buf[0] = address;
+  ESP_ERROR_CHECK(i2c_master_transmit_receive(dev_handle, out_buf, 1, data, length, I2C_TICKS_TO_WAIT));
   return 1;
 }
 
 int LSM6DS3::writeRegister(uint8_t address, uint8_t value)
 {
-  I2Cdev::writeByte(devHandle, address, value);
+  uint8_t out_buf[2];
+  out_buf[0] = address;
+  out_buf[1] = value;
+  ESP_ERROR_CHECK(i2c_master_transmit(dev_handle, out_buf, 2, I2C_TICKS_TO_WAIT));
   return 1;
 }

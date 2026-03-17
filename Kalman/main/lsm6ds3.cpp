@@ -10,20 +10,15 @@
 #include "esp_err.h"
 #include "cJSON.h"
 
+// lsm6ds3 stuff
+#include "LSM6DS3.h"
+
 #include "parameter.h"
 
 extern QueueHandle_t xQueueTrans;
 extern MessageBufferHandle_t xMessageBufferToClient;
 
 static const char *TAG = "IMU";
-
-// I2Cdev and LSM303DLHC must be installed as libraries, or else the .cpp/.h files
-// for both classes must be in the include path of your project
-#include "I2Cdev.h"
-
-#include "LSM6DS3.h"
-
-LSM6DS3 imu(CONFIG_I2C_ADDR);
 
 // Source: https://github.com/TKJElectronics/KalmanFilter
 #include "Kalman.h"
@@ -35,10 +30,14 @@ LSM6DS3 imu(CONFIG_I2C_ADDR);
 // Arduino macro
 #define micros() (unsigned long) (esp_timer_get_time())
 
-Kalman kalmanX; // Create the Kalman instances
+// Create the Kalman instances
+Kalman kalmanX;
 Kalman kalmanY;
 
-void _getMotion6(double *_ax, double *_ay, double *_az, double *_gx, double *_gy, double *_gz) {
+// Create the IMU instances
+LSM6DS3 imu(CONFIG_I2C_ADDR);
+
+void getMotion6(double *_ax, double *_ay, double *_az, double *_gx, double *_gy, double *_gz) {
 	float ax=0.0, ay=0.0, az=0.0;
 	float gx=0.0, gy=0.0, gz=0.0;
 #if 0
@@ -80,12 +79,22 @@ void getRollPitch(double accX, double accY, double accZ, double *roll, double *p
 #endif
 }
 
-void lsm6ds3(void *pvParameters){
-	// Initialize device
-	if (imu.begin(400000) == 0) {
+void lsm6ds3(void *pvParameters)
+{
+	// Initialize IMU
+	if (imu.begin() == 0) {
 		ESP_LOGE(TAG, "Connection fail");
 		vTaskDelete(NULL);
 	}
+
+	// Calibrate Gyro
+	ESP_LOGW(TAG, "IMU is currently being calibrated. Please do not move it.");
+	float gyroBias[3];
+	imu.getGyroscopeBias(gyroBias);
+	printf("gyroBias=%f %f %f\n", gyroBias[0], gyroBias[1], gyroBias[2]);
+	imu.setGyroscopeBias(gyroBias);
+	vTaskDelay(500);
+	ESP_LOGW(TAG, "IMU configuration is complete.");
 	
 	// Set Kalman and gyro starting angle
 	double accX, accY, accZ;
@@ -93,7 +102,7 @@ void lsm6ds3(void *pvParameters){
 	double roll, pitch; // Roll and pitch are calculated using the accelerometer
 	double kalAngleX, kalAngleY; // Calculated angle using a Kalman filter
 
-	_getMotion6(&accX, &accY, &accZ, &gyroX, &gyroY, &gyroZ);
+	getMotion6(&accX, &accY, &accZ, &gyroX, &gyroY, &gyroZ);
 	getRollPitch(accX, accY, accZ, &roll, &pitch);
 	kalAngleX = roll;
 	kalAngleY = pitch;
@@ -107,7 +116,7 @@ void lsm6ds3(void *pvParameters){
 	double initial_kalAngleY = 0.0;
 
 	while(1){
-		_getMotion6(&accX, &accY, &accZ, &gyroX, &gyroY, &gyroZ);
+		getMotion6(&accX, &accY, &accZ, &gyroX, &gyroY, &gyroZ);
 		//printf("%f %f %f - %f %f %f\n", accX, accY, accZ, gyroX, gyroY, gyroZ);
 		getRollPitch(accX, accY, accZ, &roll, &pitch);
 

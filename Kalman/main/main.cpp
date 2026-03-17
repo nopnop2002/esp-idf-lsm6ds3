@@ -5,7 +5,6 @@
 #include "freertos/message_buffer.h"
 #include "esp_log.h"
 #include "mdns.h"
-#include "I2Cdev.h"
 
 #include "parameter.h"
 
@@ -54,9 +53,6 @@ void app_main(void)
 
 	// Initialize mDNS
 	start_mdns();
-
-	// Initialize i2c
-	I2Cdev::initialize();
 
 	// Create Queue
 	xQueueTrans = xQueueCreate(10, sizeof(POSE_t));
