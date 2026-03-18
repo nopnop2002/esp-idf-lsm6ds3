@@ -14,24 +14,36 @@ ESP-IDF V5.2 or later.
 Because this project uses the new I2C driver.   
 
 # Hardware requirements
-LSM6DS3 Accelerometer Gyroscope module 6 Dof inertial Measurement Sensors.   
+This project supports the following IMUs:   
+- LSM6DS3 Accelerometer Gyroscope module 6 Dof inertial Measurement Sensors.   
+- LSM6DSM Accelerometer Gyroscope module 6 Dof inertial Measurement Sensors.   
+- LSM6DSL Accelerometer Gyroscope module 6 Dof inertial Measurement Sensors.   
+- LSM6DSR Accelerometer Gyroscope module 6 Dof inertial Measurement Sensors.   
+- LSM6DSO Accelerometer Gyroscope module 6 Dof inertial Measurement Sensors.   
+
+__Note for LSM6DSV__   
+LSM6DSV is not supported because it has a different register map.   
 
 # Wireing
-|LSM6DS3||ESP32|ESP32-S2/S3|ESP32-C2/C3/C6||
+|lsm6dsX||ESP32|ESP32-S2/S3|ESP32-C2/C3/C6||
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|VIN|--|N/C|N/C|N/C||
+|VIN(*3)|--|N/C|N/C|N/C||
 |3V3|--|3.3V|3.3V|3.3V||
 |GND|--|GND|GND|GND||
 |SCL|--|GPIO22|GPIO12|GPIO5|(*1)|
 |SDA|--|GPIO21|GPIO11|GPIO4|(*1)|
 |CS|--|3.3V|3.3V|3.3V|Use i2c|
-|SAO|--|GND/3.3V|GND/3.3V|GND/3.3V|(*2)|
+|SAO(*4)|--|GND/3.3V|GND/3.3V|GND/3.3V|(*2)|
 
 (*1)You can change it to any pin using menuconfig.   
 
-(*2)Choosing an i2c address.   
+(*2)I2C address selection.   
 GND:i2c address is 0x6A.   
 3.3V:i2c address is 0x6B.   
+
+(*3)Some modules do not have this pin.   
+
+(*4)They may also be marked as ADO or SDO.   
 
 # Find the sensor
 We can find the sensor using [i2c-tools](https://github.com/espressif/esp-idf/tree/master/examples/peripherals/i2c/i2c_tools).   
@@ -44,8 +56,13 @@ The i2c address for this sensor is 0x6a or 0x6b.
 ![Image](https://github.com/user-attachments/assets/676e02f4-142f-4c97-93fa-569e7598f325)
 
 - Read register.   
-Register 0x0f for this sensor is 0x69.   
+Read register 0x0F.   
+LSM6DS3 is 0x69.   
+LSM6DSM/LSM6DSL is 0x6A.   
+LSM6DSR is 0x6B.   
+LSM6DSO is 0x6C.   
 ![Image](https://github.com/user-attachments/assets/c80cd905-2750-43ac-8164-e35626d26d3d)
+
 
 # Get Euler angles from lsm6ds3 using Kalman filter
 ```

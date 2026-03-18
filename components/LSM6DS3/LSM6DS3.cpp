@@ -68,10 +68,34 @@ int LSM6DS3::begin()
   ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_cfg, &dev_handle));
 
   // Get Who_AM_I register
+  //int who_am_i = readRegister(LSM6DS3_WHO_AM_I_REG);
+  who_am_i = readRegister(LSM6DS3_WHO_AM_I_REG);
+  printf("who_am_i=0x%x\n", who_am_i);
+  switch(who_am_i) {
+    case 0x69:
+      printf("IMU is LSM6DS3\n");
+      break;
+    case 0x6A:
+      printf("IMU is LSM6DSM/LSM6DSL\n");
+      break;
+    case 0x6B:
+      printf("IMU is LSM6DSR\n");
+      break;
+    case 0x6C:
+      printf("IMU is LSM6DSO\n");
+      break;
+    default:
+      printf("IMU is unknown\n");
+      end();
+      return 0;
+  } // end switch
+
+#if 0
   if (!(readRegister(LSM6DS3_WHO_AM_I_REG) == 0x6C || readRegister(LSM6DS3_WHO_AM_I_REG) == 0x69)) {
     end();
     return 0;
   }
+#endif
 
   // Set the Accelerometer control register to work at 104 Hz, 4 g,and in bypass mode and enable ODR/4
   // low pass filter (check figure9 of LSM6DS3's datasheet)
@@ -104,10 +128,6 @@ int LSM6DS3::readAcceleration(float& x, float& y, float& z)
   int16_t data[3];
 
   if (!readRegisters(LSM6DS3_OUTX_L_XL, (uint8_t*)data, sizeof(data))) {
-    //x = NAN;
-    //y = NAN;
-    //z = NAN;
-
     return 0;
   }
 
@@ -142,22 +162,29 @@ int LSM6DS3::readGyroscope(float& x, float& y, float& z)
   int16_t data[3];
 
   if (!readRegisters(LSM6DS3_OUTX_L_G, (uint8_t*)data, sizeof(data))) {
-    //x = NAN;
-    //y = NAN;
-    //z = NAN;
-
     return 0;
   }
 
+  // Gyroscope full-scale of LSM6DS3 is 250 dps.
+  float gyroScale = 32768.0 / 250.0;
+  // Gyroscope full-scale of LSM6DSM is 245 dps.
+  if (who_am_i == 0x6A) gyroScale = 32768.0 / 245.0;
+  //printf("gyroScale=%f\n", gyroScale);
 #if 0
-  x = data[0] * 2000.0 / 32768.0;
-  y = data[1] * 2000.0 / 32768.0;
-  z = data[2] * 2000.0 / 32768.0;
+  x = data[0] * 250.0 / 32768.0;
+  y = data[1] * 250.0 / 32768.0;
+  z = data[2] * 250.0 / 32768.0;
 #endif
+
+#if 0
   x = (data[0] - _gyroBias[0]) / 131.0;
   y = (data[1] - _gyroBias[1]) / 131.0;
   z = (data[2] - _gyroBias[2]) / 131.0;
+#endif
 
+  x = (data[0] - _gyroBias[0]) / gyroScale;
+  y = (data[1] - _gyroBias[1]) / gyroScale;
+  z = (data[2] - _gyroBias[2]) / gyroScale;
   return 1;
 }
 
