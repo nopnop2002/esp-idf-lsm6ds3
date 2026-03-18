@@ -68,8 +68,7 @@ int LSM6DS3::begin()
   ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_cfg, &dev_handle));
 
   // Get Who_AM_I register
-  //int who_am_i = readRegister(LSM6DS3_WHO_AM_I_REG);
-  who_am_i = readRegister(LSM6DS3_WHO_AM_I_REG);
+  int who_am_i = readRegister(LSM6DS3_WHO_AM_I_REG);
   printf("who_am_i=0x%x\n", who_am_i);
   switch(who_am_i) {
     case 0x69:
@@ -165,10 +164,8 @@ int LSM6DS3::readGyroscope(float& x, float& y, float& z)
     return 0;
   }
 
-  // Gyroscope full-scale of LSM6DS3 is 250 dps.
+  // Gyroscope full-scale is 250 dps.
   float gyroScale = 32768.0 / 250.0;
-  // Gyroscope full-scale of LSM6DSM is 245 dps.
-  if (who_am_i == 0x6A) gyroScale = 32768.0 / 245.0;
   //printf("gyroScale=%f\n", gyroScale);
 #if 0
   x = data[0] * 250.0 / 32768.0;

@@ -79,7 +79,6 @@ class LSM6DS3 {
 
   private:
     uint16_t devAddr; // I2C device address
-    uint16_t who_am_i; // Who_AM_I register
     float _accelBias[3] = {0};
     float _gyroBias[3] = {0};
 };
