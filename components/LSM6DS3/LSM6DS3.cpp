@@ -122,6 +122,40 @@ void LSM6DS3::end()
   writeRegister(LSM6DS3_CTRL1_XL, 0x00);
 }
 
+void LSM6DS3::getBias(float *gyroBias, float* accelBias) {
+  int16_t data[6];
+  int32_t sum[6] = {0};
+  int count = 0;
+
+  while(1) {
+    if (readRegisters(LSM6DS3_OUTX_L_G, (uint8_t*)data, sizeof(data))) {
+      sum[0] += data[0]; // gyro-x
+      sum[1] += data[1]; // gyro-y
+      sum[2] += data[2]; // gyro-z
+      sum[3] += data[3]; // accel-x
+      sum[4] += data[4]; // accel-z
+      int accelZ = data[5] - 8192;
+      sum[5] += accelZ; // accel-z
+      //printf("%d %d %d - %d %d %d %d\n", data[0], data[1], data[2], data[3], data[4], data[5], accelZ);
+      //printf("sum=%ld %ld %ld\n", sum[0],sum[1],sum[2]);
+      count++;
+      if (count == 100) break;
+      delay(10);
+    }
+  }
+  for (int i = 0; i < 3; ++i) {
+    gyroBias[i] = sum[i] / 100.0f;
+    accelBias[i] = sum[i+3] / 100.0f;
+  }
+}
+
+void LSM6DS3::setBias(float *gyroBias, float* accelBias) {
+  for (int i = 0; i < 3; ++i) {
+    _gyroBias[i] = gyroBias[i];
+    _accelBias[i] = accelBias[i];
+  }
+}
+
 int LSM6DS3::readAcceleration(float& x, float& y, float& z)
 {
   int16_t data[3];
@@ -135,9 +169,16 @@ int LSM6DS3::readAcceleration(float& x, float& y, float& z)
   y = data[1] * 4.0 / 32768.0;
   z = data[2] * 4.0 / 32768.0;
 #endif
+
+#if 0
   x = data[0] / 8192.0;
   y = data[1] / 8192.0;
   z = data[2] / 8192.0;
+#endif
+
+  x = (data[0] - _accelBias[0]) / 8192.0;
+  y = (data[1] - _accelBias[1]) / 8192.0;
+  z = (data[2] - _accelBias[2]) / 8192.0;
 
   return 1;
 }
@@ -197,33 +238,6 @@ int LSM6DS3::gyroscopeAvailable()
 float LSM6DS3::gyroscopeSampleRate()
 {
   return 104.0F;
-}
-
-void LSM6DS3::getGyroscopeBias(float *gyroBias) {
-  int16_t data[3];
-  int32_t sum[3] = {0};
-  int count = 0;
-
-  while(1) {
-    if (readRegisters(LSM6DS3_OUTX_L_G, (uint8_t*)data, sizeof(data))) {
-      sum[0] += data[0];
-      sum[1] += data[1];
-      sum[2] += data[2];
-      //printf("sum=%ld %ld %ld\n", sum[0],sum[1],sum[2]);
-      count++;
-      if (count == 100) break;
-      delay(10);
-    }
-  }
-  for (int i = 0; i < 3; ++i) {
-    gyroBias[i] = sum[i] / 100.0f;
-  }
-}
-
-void LSM6DS3::setGyroscopeBias(float *gyroBias) {
-  for (int i = 0; i < 3; ++i) {
-    _gyroBias[i] = gyroBias[i];
-  }
 }
 
 int LSM6DS3::readRegister(uint8_t address)
