@@ -82,14 +82,16 @@ void lsm6ds3(void *pvParameters)
 		vTaskDelete(NULL);
 	}
 
-	// Calibrate Gyro
+	// Calibrate IMU
 	ESP_LOGW(TAG, "IMU is currently being calibrated. Please do not move it.");
 	float gyroBias[3];
-	imu.getGyroscopeBias(gyroBias);
+	float accelBias[3];
+	imu.getBias(gyroBias, accelBias);
 	printf("gyroBias=%f %f %f\n", gyroBias[0], gyroBias[1], gyroBias[2]);
-	imu.setGyroscopeBias(gyroBias);
+	printf("accelBias=%f %f %f\n", accelBias[0], accelBias[1], accelBias[2]);
+	imu.setBias(gyroBias, accelBias);
 	vTaskDelay(500);
-	ESP_LOGW(TAG, "IMU configuration is complete.");
+	ESP_LOGW(TAG, "IMU calibration is complete.");
 	
 	int elasped = 0;
 	double last_time_ = TimeToSec();
