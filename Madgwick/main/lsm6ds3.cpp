@@ -20,7 +20,6 @@ extern MessageBufferHandle_t xMessageBufferToClient;
 
 static const char *TAG = "IMU";
 
-
 // Source: https://github.com/arduino-libraries/MadgwickAHRS
 #include "MadgwickAHRS.h"
 
