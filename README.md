@@ -25,7 +25,7 @@ __Note for LSM6DSV__
 LSM6DSV is not supported because it has a different register map.   
 
 # Wireing
-|lsm6dsX||ESP32|ESP32-S2/S3|ESP32-C2/C3/C6||
+|lsm6dsX||ESP32|ESP32-S2/S3|ESP32-Cx||
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |VIN(*3)|--|N/C|N/C|N/C||
 |3V3|--|3.3V|3.3V|3.3V||
